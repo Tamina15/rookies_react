@@ -7,6 +7,7 @@ import Error from "./components/Error";
 // import Profile from "./components/Profile";
 import Users from "./components/Users"
 import Categories from "./components/Categories";
+import NewAdmin from "./components/NewAdmin";
 
 
 export const appRoutes = [
@@ -34,6 +35,11 @@ export const appRoutes = [
     {
         path: "/users",
         component: Users,
+        requireAuth: true,
+    },
+    {
+        path: "/users/new",
+        component: NewAdmin,
         requireAuth: true,
     },
     {

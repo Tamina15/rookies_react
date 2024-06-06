@@ -145,7 +145,7 @@ function Users(props) {
     return (<>
         {loading ? (<h5 className="m-5"> Loading ... </h5>) : ""}
         <Container className="m-3">
-            <Button>New Admin</Button>
+            <Button as={Link} to={'/users/new'}>New Admin</Button>
         </Container>
         <Table striped bordered hover size="sm" className="mt-3">
             <thead>
