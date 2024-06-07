@@ -57,10 +57,6 @@ function Categories(props) {
         }
     }, []);
 
-    // function changePage(page, pageSize) {
-    //     console.log(page, pageSize);
-    //     getCategories(baseUrl + "categories?" + "page=" + (page - 1) + "&" + "limit=" + (pageSize) + "&" + "sortBy=" + "id").catch((e) => { console.error(e); setError(true); });
-    // }
     async function updateCategory(e) {
         setLoading(true)
         e.preventDefault();
@@ -88,7 +84,7 @@ function Categories(props) {
     }
     async function createCategory(e) {
         e.preventDefault();
-        if (Object.keys(newCategory).length === 0) {
+        if (newCategory === undefined || Object.keys(newCategory).length === 0) {
             return window.alert("Please Provide Inputs")
         }
         setLoading(true)
@@ -112,6 +108,8 @@ function Categories(props) {
             console.log(data);
             setCategories(c => [...c, data])
             setNewCategory(c => { })
+            document.getElementById("add_name").value = "";
+            document.getElementById("add_description").value = "";
         }).catch((e) => { console.error(e.status); setError(true); });
         setLoading(false)
     }
@@ -148,7 +146,7 @@ function Categories(props) {
     }
     return (<>
         {loading ? (<h5 className="m-5"> Loading ... </h5>) : ""}
-        <Container className="m-5">
+        <Container className="mt-5">
             <Form className="mb-4" onSubmit={(e) => { createCategory(e) }}>
                 <Row className="gy-1 gx-3">
                     <Col sm={3} md={3}>
@@ -174,14 +172,14 @@ function Categories(props) {
                 </thead>
                 <tbody key={"table_body"}>
                     {categories && categories.map((category, index) => (
-                        <tr key={"table_row_" + index} style={{ height: "30px", "minHeight": "10px" }}>
+                        <tr className="align-middle" key={"table_row_" + index} style={{ height: "30px", "minHeight": "10px" }}>
                             <td key={category.id}> {category.id}</td>
                             <td> {category.name}</td>
                             <td > {category.description}</td>
                             <td style={{ width: "500px", "maxWidth": "500px" }}>
-                                <Button className="m-3 btn-primary" key={"edit_" + category.id} value={category.id} onClick={(e) => handleShow(e.target.value)}>Edit</Button>
+                                <Button className="m-3 btn-success" key={"detail_" + category.id} as={Link} to={"/categories/" + category.id}>View Detail</Button>
+                                {/* <Button className="m-3 btn-primary" key={"edit_" + category.id} value={category.id} onClick={(e) => handleShow(e.target.value)}>Edit</Button> */}
                                 <Button className="m-3 btn-danger" key={"delete_" + category.id} value={category.id} onClick={(e) => deleteCategory(e)}>Delete</Button>
-                                <Button className="m-3 btn-danger" key={"detail_" + category.id} value={category.id} onClick={(e) => deleteCategory(e)}>Delete</Button>
                             </td>
                         </tr>
                     ))}
@@ -195,7 +193,7 @@ function Categories(props) {
 
         <Modal show={show} onHide={handleClose}>
             <Modal.Header closeButton>
-                <Modal.Title>Edit Cetegory</Modal.Title>
+                <Modal.Title>Edit Category</Modal.Title>
             </Modal.Header>
             <Form onSubmit={(e) => updateCategory(e)}>
                 <Modal.Body>
@@ -214,7 +212,6 @@ function Categories(props) {
                     </Button>
                     <Button variant="success" type="submit">
                         {loading ? "Editing" : "Edit"}
-                        {/* Upload */}
                     </Button>
                 </Modal.Footer>
             </Form>
