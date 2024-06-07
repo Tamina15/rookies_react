@@ -4,7 +4,7 @@ import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import { Link, Outlet } from 'react-router-dom';
-
+import { ShoppingCartOutlined } from '@ant-design/icons';
 function App() {
     let [user, setUser] = useState({});
     return (
@@ -38,7 +38,9 @@ function App() {
                     </Form>
                 </Container>
                 <Container className='pe-5 gx-5 justify-content-end'>
-
+                <Button className='mx-4' variant='outline-dark' as={Link} to={'/cart'}>
+                <ShoppingCartOutlined />
+                </Button>
                     {sessionStorage.user ?
                         <>
                             <Navbar.Text className='me-5'>

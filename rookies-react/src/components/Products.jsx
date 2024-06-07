@@ -12,11 +12,11 @@ const Products = (props) => {
     const { baseUrl, feature } = props;
 
     const [products, setProducts] = useState([]);
-    let [categories, setCategories] = useState([]);
-    let [categoryId, setCategoryId] = useState('');
-    let [total, setTotal] = useState(0);
-    let [error, setError] = useState(false);
-
+    const [categories, setCategories] = useState([]);
+    const [categoryId, setCategoryId] = useState('');
+    const [total, setTotal] = useState(0);
+    const [error, setError] = useState(false);
+const [loading, setLoading] = useState(true);
     // addParam true to append to the query, false to start new param query
     const getProducts = async (url, addParam = true) => {
         if (addParam) {
@@ -31,6 +31,7 @@ const Products = (props) => {
         console.log(data);
         setProducts(data.products);
         setTotal(data.count);
+        setLoading(false);
         return response.data;
     };
     async function getCategories(url) {
@@ -68,9 +69,25 @@ const Products = (props) => {
         getProducts(baseUrl + "products?page=" + (page - 1) + "&" + (feature ? 'featured=true' : ''), false).catch((e) => { console.error(e); setError(true); });
     }
 
+    function addToCart(e) {
+        const product_id = e.target.value;
+        const amount = 1;
+        let cart = localStorage.getItem("cart")
+        if (cart === null) {
+            cart = localStorage.setItem("cart", product_id + ":" + amount);
+        } else {
+            cart = cart + "," + product_id + ":" + amount;
+            console.log("cart ", cart);
+            cart = localStorage.setItem("cart", cart);
+        }
+
+
+
+    }
     return (
         <>
             <Container fluid='sm' className='mt-4 justify-content-center'>
+          {loading ? <h3>Loading ...</h3>:""} 
                 <Form onSubmit={(e) => { applyCategory(e); }}>
                     <Row>
                         <Col sm={2} md={2} xxl={2}>
@@ -102,7 +119,7 @@ const Products = (props) => {
                                     </Card.Text>
                                     <Row>
                                         <Col>
-                                            <Button variant="primary">Add To Cart</Button>
+                                            <Button variant="primary" value={product.id} onClick={(e) => { addToCart(e) }}>Add To Cart</Button>
                                         </Col>
                                         <Col>
                                             <Button variant="success" as={Link} to={'/products/' + product.id}>View Detail</Button>

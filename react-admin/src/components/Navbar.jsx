@@ -25,7 +25,7 @@ function App() {
                 </Nav.Item>
             </Nav>
             <Container id='main'>
-                <Outlet />
+                <Outlet></Outlet>
             </Container>
         </>
     </>);

@@ -8,6 +8,8 @@ import Error from "./components/Error";
 import Users from "./components/Users"
 import Categories from "./components/Categories";
 import NewAdmin from "./components/NewAdmin";
+import CategoryDetail from "./components/CategoryDetail";
+import NewProduct from "./components/NewProduct";
 
 
 export const appRoutes = [
@@ -23,8 +25,8 @@ export const appRoutes = [
         requireAuth: true
     },
     {
-        path: "/categories",
-        component: Categories,
+        path: "/products/new",
+        component: NewProduct,
         requireAuth: true
     },
     {
@@ -32,6 +34,17 @@ export const appRoutes = [
         component: ProductDetail,
         requireAuth: true
     },
+    {
+        path: "/categories",
+        component: Categories,
+        requireAuth: true
+    },
+    {
+        path: "/categories/:categoryId",
+        component: CategoryDetail,
+        requireAuth: true
+    },
+
     {
         path: "/users",
         component: Users,

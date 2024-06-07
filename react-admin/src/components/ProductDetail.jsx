@@ -70,6 +70,7 @@ function ProductDetail(props) {
 
     function changeProductInfo(name, e) {
         setProduct(p => ({ ...p, [name]: e }));
+        console.log(product)
     }
 
     function addCategory(value) {
@@ -252,7 +253,7 @@ function ProductDetail(props) {
                     </Form.Group>
                     <Form.Group className="mb-3" id="feature">
                         <Form.Label>Product Feature</Form.Label>
-                        <Form.Check type="switch" defaultChecked={product.feature ? "True" : "False"} id="feature" onChange={(e) => changeProductInfo("feature", e.target.checked)} />
+                        <Form.Check type="switch" defaultChecked={product.feature} id="feature" onChange={(e) =>{console.log(e.target.checked); changeProductInfo("feature", e.target.checked)}} />
                     </Form.Group>
                     <Form.Group className="mb-3" id="submit">
                         <Button type="submit">Edit
