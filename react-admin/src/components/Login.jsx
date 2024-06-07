@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, Col, Container, Form, Row } from "react-bootstrap";
+import { Button, Col, Container, Form, Row, Spinner } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 
 
@@ -42,7 +42,6 @@ function Login(props) {
                     throw new Error(status)
                 }
                 response = await response.json()
-                console.log(response);
                 if (response.token) {
                     sessionStorage.setItem("admin", JSON.stringify({ email, token: response.token, expiresIn: response.expiresIn }))
                     props.setLoggedIn(true)
@@ -71,8 +70,14 @@ function Login(props) {
                             </Form.Group>
 
                             <Form.Group className="justify-content-md-center">
-                                <Button variant="primary" type="submit" disabled={loggingIn ? true : false}>
-                                    Login
+                                <Button variant="primary" type="submit" disabled={loggingIn}>
+                                    {loggingIn ? <Spinner
+                                        as="span"
+                                        animation="border"
+                                        size="sm"
+                                        role="status"
+                                        aria-hidden="true"
+                                    /> : "Login"}
                                 </Button>
                             </Form.Group>
                         </Form>

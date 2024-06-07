@@ -4,14 +4,6 @@ import { Link, useNavigate, useRouteError } from "react-router-dom";
 
 function Error() {
     const navigate = useNavigate()
-    useEffect(
-        () => {
-            setTimeout(() => {
-                navigate('/login')
-            }, 5000);
-
-        }, []
-    )
     return (
         <Container className="d-flex flex-column justify-content-center align-items-center">
             <h1 className="--bs-danger">
