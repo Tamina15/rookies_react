@@ -14,9 +14,12 @@ function Products(props) {
     let [total, setTotal] = useState(0);
     let [error, setError] = useState(false);
     let [loading, setLoading] = useState(true);
+    const [show, setShow] = useState(false);
 
     let navigate = useNavigate();
 
+    const handleClose = () => setShow(false);
+    const handleShow = (e) => { setShow(true) };
 
     const getProducts = async (url) => {
         const response = await fetch(url, {
@@ -34,13 +37,13 @@ function Products(props) {
             console.log(data);
             setProducts(data.products);
             setTotal(data.count);
+            setLoading(false);
         }).catch((e) => { console.error(e.status); setError(true); });
 
     };
 
     useEffect(() => {
         getProducts(baseUrl + 'products?sortBy=id');
-        setLoading(false)
     }, []);
 
     if (error) {
@@ -118,54 +121,55 @@ function Products(props) {
     }
 
     return (<>
-        {/* <Container className='mt-4 justify-content-center'> */}
-        {loading ? (<h5 className="m-5"> Loading ... </h5>) : ""}
-        <Container className="m-3">
-            <Button>New Product</Button>
-        </Container>
-        <Table striped bordered hover size="sm" className="mt-3">
-            <thead>
-                <tr>
-                    {tableHeader.map((header) => (
-                        <th key={header} >{header}</th>
-                    ))}
-                </tr>
-            </thead>
-            <tbody>
-                {products && products.map((product, index) => (
+        <Container>
+            {loading ? (<h5 className="m-5"> Loading ... </h5>) : ""}
+            <Container className="m-3">
+                <Button as={Link} to={"/products/new"}>New Product</Button>
+            </Container>
+            <Table striped bordered hover size="sm" className="mt-3">
+                <thead>
                     <tr>
-                        <td key={product.id}> {product.id}</td>
-                        <td> {product.name}</td>
-                        <td > {product.description}</td>
-                        <td> {product.amount}</td>
-                        <td> {product.price}</td>
-                        <td> {product.rating}</td>
-                        <td> {JSON.stringify((product.category.map(c => { return (c.id); })))}</td>
-                        <td> {product.feature ? "True" : "False"}</td>
-                        <td> {product.created_at}</td>
-                        <td> {product.updated_at}</td>
-                        {/* <td> {product.image.map(i => { return (<><Link to={i.url}>{i.url}</Link> <br /></>); })}</td> */}
-                        <td style={{ width: "100px" }}><Container className="justify-content-center d-flex flex-column">
-                            <Button className="m-3 btn-warning" key={"edit_" + product.id} as={Link} to={"/products/" + product.id}>Edit</Button>
-                            {
-                                product.deleted ?
-                                    <Button className="m-3 btn-success" key={"restore" + product.id} value={product.id} onClick={(e) => restoreProduct(e)}>Restore</Button>
-                                    :
-                                    <Button className="m-3 btn-danger" key={"delete_" + product.id} value={product.id} onClick={(e) => deleteProduct(e, false)}>Soft Delete</Button>
-
-                            }
-                        </Container>
-                        </td>
-
+                        {tableHeader.map((header) => (
+                            <th key={header} >{header}</th>
+                        ))}
                     </tr>
-                ))}
-            </tbody>
-        </Table>
+                </thead>
+                <tbody>
+                    {products && products.map((product, index) => (
+                        <tr key={index} className="align-middle">
+                            <td key={product.id}> {product.id}</td>
+                            <td> {product.name}</td>
+                            <td > {product.description}</td>
+                            <td> {product.amount}</td>
+                            <td> {product.price}</td>
+                            <td> {product.rating}</td>
+                            <td> {JSON.stringify((product.category.map(c => { return (c.id); })))}</td>
+                            <td> {product.feature ? "True" : "False"}</td>
+                            <td> {product.created_at}</td>
+                            <td> {product.updated_at}</td>
+                            {/* <td> {product.image.map(i => { return (<><Link to={i.url}>{i.url}</Link> <br /></>); })}</td> */}
+                            <td style={{ width: "100px" }}><Container className="justify-content-center d-flex flex-column">
+                                <Button className="m-3 btn-warning" key={"edit_" + product.id} as={Link} to={"/products/" + product.id}>Edit</Button>
+                                {
+                                    product.deleted ?
+                                        <Button className="m-3 btn-success" key={"restore" + product.id} value={product.id} onClick={(e) => restoreProduct(e)}>Restore</Button>
+                                        :
+                                        <Button className="m-3 btn-danger" key={"delete_" + product.id} value={product.id} onClick={(e) => deleteProduct(e, false)}>Soft Delete</Button>
 
-        <Row className='mt-4 justify-content-center'>
-            <Pagination changePage={changePage} total={total}></Pagination>
-        </Row>
-        {/* </Container> */}
+                                }
+                            </Container>
+                            </td>
+
+                        </tr>
+                    ))}
+                </tbody>
+            </Table>
+
+            <Row className='mt-4 justify-content-center'>
+                <Pagination changePage={changePage} total={total}></Pagination>
+            </Row>
+        </Container>
+        
     </>);
 }
 

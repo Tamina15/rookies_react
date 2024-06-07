@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { Button, Container, Row, Table } from "react-bootstrap";
+import { Badge, Button, Container, Row, Table } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { default as Pagination } from './Pagination'
 
-const tableHeader = ['ID', 'Email', 'Username', "Block", "Roles"]
+const tableHeader = ['ID', 'Email', 'Username', "Status", "Roles"]
 
 
 function Users(props) {
@@ -36,7 +36,7 @@ function Users(props) {
     };
 
     useEffect(() => {
-        if(!loggedIn){
+        if (!loggedIn) {
             return navigate('/login')
         }
         getUsers(baseUrl + 'users?sortBy=id');
@@ -144,53 +144,57 @@ function Users(props) {
 
     return (<>
         {loading ? (<h5 className="m-5"> Loading ... </h5>) : ""}
-        <Container className="m-3">
-            <Button as={Link} to={'/users/new'}>New Admin</Button>
-        </Container>
-        <Table striped bordered hover size="sm" className="mt-3">
-            <thead>
-                <tr>
-                    {tableHeader.map((header) => (
-                        <th key={header} >{header}</th>
-                    ))}
-                </tr>
-            </thead>
-            <tbody key={"table_body"}>
-                {users && users.map((user, index) => (
-                    <tr key={"table_row_" + index} style={{ height: "100px" }}>
-                        <td key={user.id}> {user.id}</td>
-                        <td> {user.email}</td>
-                        <td > {user.username}</td>
-                        <td defaultValue={user.isBlock ? "Blocked" : ""}> {user.isBlock ? "Blocked" : ""}</td>
-                        <td> {user.roles && user.roles.map(role => { return role })}</td>
-                        <td style={{ width: "400px" }}><Container className="justify-content-center d-flex flex-row">
-                            {/* <Button className="m-3 btn-warning" key={"edit_" + user.id} as={Link} to={"/users/" + user.id}>Edit</Button> */}
-                            {
-                                user.isBlock ?
-                                    <Button className="m-3 btn-warning" key={"unblock_" + user.id} value={user.id} onClick={(e) => blockUser(e, false)}>Unblock</Button>
-                                    :
-                                    <Button className="m-3 btn-warning" key={"block_" + user.id} value={user.id} onClick={(e) => blockUser(e, true)}>Block</Button>
-                            }
-                            {
-                                user.deleted ?
-                                    <>
-                                        {/* <Button className="m-3 btn-danger" key={"delete_" + user.id} value={user.id} onClick={(e) => deleteUser(e, true)}>Hard Delete</Button> */}
-                                        <Button className="m-3 btn-success" key={"restore_" + user.id} value={user.id} onClick={(e) => restoreUser(e)}>Restore</Button>
-                                    </>
-                                    :
+        <Container>
+            <Container className="m-3">
+                <Button as={Link} to={'/users/new'}>New Admin</Button>
+            </Container>
 
-                                    <Button className="m-3 btn-danger" key={"delete_" + user.id} value={user.id} onClick={(e) => deleteUser(e, false)}>Soft Delete</Button>
-                            }
-                        </Container>
-                        </td>
+            <Table striped bordered hover size="sm" className="mt-3">
+                <thead>
+                    <tr>
+                        {tableHeader.map((header) => (
+                            <th key={header} >{header}</th>
+                        ))}
                     </tr>
-                ))}
-            </tbody>
-        </Table>
+                </thead>
+                <tbody key={"table_body"}>
+                    {users && users.map((user, index) => (
+                        <tr className="align-middle" key={"table_row_" + index} style={{ height: "100px" }}>
+                            <td key={user.id}> {user.id}</td>
+                            <td> {user.email}</td>
+                            <td > {user.username}</td>
+                            {/* <td defaultValue={user.isBlock ? "Blocked" : ""}> {user.isBlock ? "Blocked" : ""}</td> */}
+                            <td> {user.isBlock ? <Badge bg="danger">Blocked</Badge> : <Badge bg="success">Not Blocked</Badge>}</td>
+                            <td> {user.roles && user.roles.map(role => { return role })}</td>
+                            <td style={{ width: "400px" }}><Container className="justify-content-center d-flex flex-row">
+                                {/* <Button className="m-3 btn-warning" key={"edit_" + user.id} as={Link} to={"/users/" + user.id}>Edit</Button> */}
+                                {
+                                    user.isBlock ?
+                                        <Button className="m-3 btn-warning" key={"unblock_" + user.id} value={user.id} onClick={(e) => blockUser(e, false)}>Unblock</Button>
+                                        :
+                                        <Button className="m-3 btn-warning" key={"block_" + user.id} value={user.id} onClick={(e) => blockUser(e, true)}>Block</Button>
+                                }
+                                {
+                                    user.deleted ?
+                                        <>
+                                            {/* <Button className="m-3 btn-danger" key={"delete_" + user.id} value={user.id} onClick={(e) => deleteUser(e, true)}>Hard Delete</Button> */}
+                                            <Button className="m-3 btn-success" key={"restore_" + user.id} value={user.id} onClick={(e) => restoreUser(e)}>Restore</Button>
+                                        </>
+                                        :
 
-        <Row className='mt-4 justify-content-center'>
-            <Pagination changePage={changePage} total={total}></Pagination>
-        </Row>
+                                        <Button className="m-3 btn-danger" key={"delete_" + user.id} value={user.id} onClick={(e) => deleteUser(e, false)}>Soft Delete</Button>
+                                }
+                            </Container>
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </Table>
+
+            <Row className='mt-4 justify-content-center'>
+                <Pagination changePage={changePage} total={total}></Pagination>
+            </Row>
+        </Container>
     </>);
 }
 
